@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowTrack 🌸</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:'Trebuchet MS', sans-serif;
+    background:linear-gradient(135deg,#ffd6ec,#d9f4ff,#fff7cc);
+    min-height:100vh;
+}
+
+.container{
+    width:90%;
+    max-width:550px;
+    margin:30px auto;
+    background:rgba(255,255,255,0.92);
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+h1{
+    text-align:center;
+    color:#ff4f95;
+    font-size:34px;
+}
+
+h2{
+    color:#5b63ff;
+    text-align:center;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+}
+
+input, select, textarea{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:15px;
+    margin-top:8px;
+    margin-bottom:15px;
+    background:#f2f4ff;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(90deg,#ff70a8,#6b8cff);
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.hidden{
+    display:none;
+}
+
+.card{
+    background:#fff6fb;
+    padding:18px;
+    border-radius:20px;
+    margin-top:20px;
+    text-align:center;
+    animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+    from{
+        opacity:0;
+        transform:scale(0.8);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.emoji{
+    font-size:50px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+
+<div class="container" id="loginPage">
+
+    <h1>🌸 GlowTrack</h1>
+
+    <p class="subtitle">
+        Mood • Hormones • Cycle • Wellness ✨
+    </p>
+
+    <input type="text" id="username" placeholder="👤 Username">
+
+    <input type="password" id="password" placeholder="🔒 Password">
+
+    <button onclick="login()">Enter ✨</button>
+
+    <p id="loginMessage" style="text-align:center;"></p>
+
+</div>
+
+<!-- MAIN APP -->
+
+<div class="container hidden" id="mainPage">
+
+    <h2>🧬 Hormone & Wellness Tracker</h2>
+
+    <label>Select Hormone</label>
+
+    <select id="hormone">
+        <option>🌸 Estrogen</option>
+        <option>🍬 Insulin</option>
+        <option>⚡ Adrenaline</option>
+        <option>🦋 Thyroxine</option>
+        <option>🌱 Growth Hormone</option>
+        <option>💪 Testosterone</option>
+    </select>
+
+    <label>Hormone Level</label>
+
+    <input type="number" id="level" placeholder="Enter hormone level">
+
+    <label>Today's Mood</label>
+
+    <textarea id="notes" rows="4"
+    placeholder="Happy? Sleepy? Energetic? ✨"></textarea>
+
+    <button onclick="checkHormone()">
+        Check My Wellness 🌈
+    </button>
+
+    <div class="card" id="output"></div>
+
+    <hr style="margin:30px 0;">
+
+    <!-- MENSTRUATION TRACKER -->
+
+    <h2>🌙 Cycle Tracker</h2>
+
+    <label>Last Period Start Date</label>
+
+    <input type="date" id="periodDate">
+
+    <label>Average Cycle Length (days)</label>
+
+    <input type="number" id="cycleLength"
+    placeholder="Usually 28">
+
+    <button onclick="trackCycle()">
+        Predict Next Period 💖
+    </button>
+
+    <div class="card" id="cycleOutput"></div>
+
+    <br>
+
+    <button onclick="logout()">Logout 👋</button>
+
+</div>
+
+<script>
+
+const demoUser = "glow";
+const demoPass = "1234";
+
+function login(){
+
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if(user === demoUser && pass === demoPass){
+
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainPage").classList.remove("hidden");
+
+    } else {
+
+        document.getElementById("loginMessage").innerHTML =
+        "❌ Try username: glow and password: 1234";
+
+    }
+}
+
+function logout(){
+
+    document.getElementById("mainPage").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+
+}
+
+function checkHormone(){
+
+    let hormone = document.getElementById("hormone").value;
+    let level = parseFloat(document.getElementById("level").value);
+    let notes = document.getElementById("notes").value;
+
+    let mood = "";
+    let emoji = "";
+
+    if(level < 30){
+
+        mood = "Your body may need some rest and care 💙";
+        emoji = "🥺";
+
+    }
+    else if(level >= 30 && level <= 70){
+
+        mood = "Your wellness balance looks great ✨";
+        emoji = "😄";
+
+    }
+    else{
+
+        mood = "Big energy detected today ⚡";
+        emoji = "🤩";
+
+    }
+
+    document.getElementById("output").innerHTML = `
+        <div class="emoji">${emoji}</div>
+
+        <h3>${hormone}</h3>
+
+        <p><strong>Level:</strong> ${level}</p>
+
+        <p>${mood}</p>
+
+        <p><strong>Notes:</strong> ${notes}</p>
+    `;
+}
+
+function trackCycle(){
+
+    let lastDate =
+    document.getElementById("periodDate").value;
+
+    let cycle =
+    parseInt(document.getElementById("cycleLength").value);
+
+    if(!lastDate || !cycle){
+
+        document.getElementById("cycleOutput").innerHTML =
+        "⚠️ Please enter all details.";
+
+        return;
+    }
+
+    let startDate = new Date(lastDate);
+
+    startDate.setDate(startDate.getDate() + cycle);
+
+    let nextPeriod =
+    startDate.toDateString();
+
+    document.getElementById("cycleOutput").innerHTML = `
+        <div class="emoji">🌙</div>
+
+        <h3>Next Predicted Period</h3>
+
+        <p><strong>${nextPeriod}</strong></p>
+
+        <p>Stay hydrated, rested & glowing 💖</p>
+    `;
+}
+
+</script>
+
+</body>
+</html>
